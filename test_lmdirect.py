@@ -26,7 +26,7 @@ def main():
         hexmsg = splitline[0].rstrip()
 
         populated_line = (hexmsg[0:6] + th.lmdirect_esn_converter(esn) + hexmsg[20:33] + th.hex_sequence_number(seqno) + " " + timestamp + " " + timestamp + " " + hexmsg[63:]).upper()
-        print(populated_line)
+        # print(populated_line)
         print("Sending line", seqno, "from", filename)
         response = th.send_udp(host, port, populated_line)
 
@@ -41,7 +41,3 @@ def main():
 
 
 main()
-
-
-# Accept cL arguments Host, Port, File
-# Make data file
