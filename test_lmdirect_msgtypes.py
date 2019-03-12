@@ -1,4 +1,4 @@
-import togs_helper as th
+from utils import togs_helper as th
 from time import sleep
 import random
 import sys
