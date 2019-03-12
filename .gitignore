@@ -1,0 +1,7 @@
+test_lmdirect.spec
+venv/
+dist/
+build/
+__pycache__
+.idea/
+
