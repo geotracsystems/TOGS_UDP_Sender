@@ -1,7 +1,11 @@
-from utils import togs_helper as th
+from utils.lmdirect_helper import *
+from utils.send_udp import send_udp
 from time import sleep
 import random
 import sys
+
+
+lmdirect_message = "83 05 00 00 00 00 00 01 01 01 02 00 00 00 00 00 00 00 00 00 00 12 FB F5 B0 C3 04 17 01 00 01 49 A8 00 00 00 00 00 0E 08 00 00 00 00 00 0F 0A 01 00 15 00 01 00 01 97 21 C9"
 
 
 def main():
@@ -21,14 +25,15 @@ def main():
     line = f.readline()
 
     while line:
-        timestamp = th.unixtime_to_hexstring()
-        splitline = line.split('#', 1)
-        hexmsg = splitline[0].rstrip()
+        timestamp = unixtime_to_hexstring()
+        msgtype = line.rstrip()
 
-        populated_line = (hexmsg[0:6] + th.lmdirect_esn_converter(esn) + hexmsg[20:33] + th.hex_sequence_number(seqno) + " " + timestamp + " " + timestamp + " " + hexmsg[63:]).upper()
-        # print(populated_line)
+        populated_line = (lmdirect_message[0:6] + lmdirect_esn_converter(esn) + lmdirect_message[20:33] +
+                          hex_sequence_number(seqno) + " " + timestamp + " " + timestamp + " " +
+                          lmdirect_message[63:149] + " " + msgtype + lmdirect_message[152:]).upper()
+        print(populated_line)
         print("Sending line", seqno, "from", filename)
-        response = th.send_udp(host, port, populated_line)
+        response = send_udp(host, port, populated_line)
 
         print("Received Ack for line", seqno, ":", response)
 

@@ -1,24 +1,4 @@
-import socket
-from time import sleep
 from time import time
-
-
-def send_udp(host, port, data):
-    """Simply send UDP Data to a given Host and Port and print out the response if any"""
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.settimeout(5)
-
-    sock.sendto(bytes.fromhex(data), (host, port))
-
-    try:
-        d = sock.recvfrom(1024)
-    except socket.timeout:
-        print("ERROR: Message timed out")
-        return
-
-    ack = d[0]
-    sock.close()
-    return str(ack)
 
 
 def is_calamp_esn_valid(esn):
@@ -47,10 +27,9 @@ def unixtime_to_hexstring():
     hextimestamp = timestamp[2] + timestamp[3] + " " + timestamp[4] + timestamp[5] + " " + timestamp[6] + timestamp[7] + " " + timestamp[8] + timestamp[9]
     return hextimestamp
 
+
 def hex_sequence_number(seqno):
     """Convert an int seqno to 2-byte hex in Little Endian"""
     hexseq = format(seqno, '04x')
     seq = hexseq[0] + hexseq[1] + " " + hexseq[2] + hexseq[3]
     return seq
-
-
