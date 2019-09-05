@@ -1,6 +1,7 @@
 from time import time
 from decimal import Decimal
 
+
 def is_calamp_esn_valid(esn):
     """Validate Calamp ESN"""
     if isinstance(esn, int) and (len(str(esn)) == 10):
