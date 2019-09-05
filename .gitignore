@@ -1,7 +1,7 @@
 test_lmdirect.spec
+smalltest.py
 venv/
 dist/
 build/
 __pycache__
 .idea/
-
