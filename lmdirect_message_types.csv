@@ -1,3 +1,5 @@
+# Reference file contains all message types/event id's supported in LMDirect
+# CANNOT BE USED TO PASS TO A SCRIPT
 00
 01
 02
