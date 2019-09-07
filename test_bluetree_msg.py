@@ -36,13 +36,12 @@ if len(sys.argv) != 9 and len(sys.argv) != 5:
     print("Invalid arguments")
     print(len(sys.argv))
     print("Usage 1:\n", sys.argv[0], "<imei> <host> <port> <filename>")
-    print("Usage 2:\n", sys.argv[0], "<esn> <host> <port> single <latitude> <longitude> <speed> <eventid>")
+    print("Usage 2:\n", sys.argv[0], "<imei> <host> <port> single <latitude> <longitude> <speed> <eventid>")
     exit()
 
 esn = int(sys.argv[1])
 host = sys.argv[2]
 port = int(sys.argv[3])
-
 
 if sys.argv[4] == 'single':
     latitude = sys.argv[5]
