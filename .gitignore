@@ -1,4 +1,5 @@
-test_lmdirect.spec
+test_lmdirect_msg.spec
+test_bluetree_msg.spec
 smalltest.py
 venv/
 dist/
