@@ -29,7 +29,7 @@ if len(sys.argv) != 9 and len(sys.argv) != 5:
     print(len(sys.argv))
     print("Usage 1:\n", sys.argv[0], "<esn> <host> <port> <filename>")
     print("Usage 2:\n", sys.argv[0], "<esn> <host> <port> single <latitude> <longitude> <speed> <eventid>")
-    exit()
+    sys.exit()
 
 esn = int(sys.argv[1])
 host = sys.argv[2]
