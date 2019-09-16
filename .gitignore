@@ -1,6 +1,7 @@
 test_lmdirect_msg.spec
 test_bluetree_msg.spec
 smalltest.py
+log.txt
 venv/
 dist/
 build/

@@ -4,7 +4,10 @@ from time import sleep
 from string import Template
 from utils.lmdirect_helper import *
 from utils.send_udp import send_udp
+from utils.logger import logger
 
+
+log = logger(__file__)
 
 lmdirect_message_template = Template(
     '83 05 $esn 01 01 01 02 $seqno $timestamp1 $timestamp2 $coordinates $speed 00 0E 08 00 00 00 00 00 0F 0A 01 00 FF $eventid 01 00 01 97 21 C9'
@@ -25,7 +28,7 @@ def make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed):
 seqno = 1
 
 if len(sys.argv) != 9 and len(sys.argv) != 5:
-    print("Invalid arguments")
+    log.error("Invalid arguments")
     print(len(sys.argv))
     print("Usage 1:\n", sys.argv[0], "<esn> <host> <port> <filename>")
     print("Usage 2:\n", sys.argv[0], "<esn> <host> <port> single <latitude> <longitude> <speed> <eventid>")
@@ -36,15 +39,19 @@ host = sys.argv[2]
 port = int(sys.argv[3])
 
 if sys.argv[4] == 'single':
+    log.debug("Single Message mode")
     latitude = sys.argv[5]
     longitude = sys.argv[6]
     speed = int(sys.argv[7])
     eventid = int(sys.argv[8])
     lmdirect_message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed)
-    print("Sending single line\n", lmdirect_message)
-    response = send_udp(host, port, lmdirect_message)
-    print("Received Ack\n", response)
+    log.info("Sending single line")
+    log.info(bep_message)
+    response = send_udp(host, port, bep_message)
+    log.info("Received Ack")
+    log.info(response)
 elif sys.argv[4] != 'single' and len(sys.argv) == 5:
+    log.debug("CSV mode")
     filename = sys.argv[4]
     column_names = []
     with open(filename) as csv_file:
@@ -61,9 +68,10 @@ elif sys.argv[4] != 'single' and len(sys.argv) == 5:
                 speed = int(row[2])
                 eventid = int(row[3])
                 lmdirect_message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed)
-                print(f"Sending line {lc} from {filename}\n{lmdirect_message}")
+                log.info(f"Sending line {lc} from {filename}\n{lmdirect_message}")
                 response = send_udp(host, port, lmdirect_message)
-                print("Received Ack\n", response)
+                log.info("Received Ack")
+                log.info(response)
                 lc = lc + 1
             seqno = seqno + 1
             sleep(3)
