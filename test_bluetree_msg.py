@@ -1,5 +1,5 @@
-import sys
 import csv
+import argparse
 from time import sleep
 from string import Template
 from utils.bep_helper import *
@@ -34,32 +34,44 @@ def make_bep_message(esn, seqno, eventid, latitude, longitude, speed):
 
 seqno = 1
 
-if len(sys.argv) != 9 and len(sys.argv) != 5:
-    log.error("Invalid arguments")
-    print(len(sys.argv))
-    print("Usage 1:\n", sys.argv[0], "<imei> <host> <port> <filename>")
-    print("Usage 2:\n", sys.argv[0], "<imei> <host> <port> single <latitude> <longitude> <speed> <eventid>")
-    sys.exit()
+parser = argparse.ArgumentParser(description="Send Bluetree BEP Messages")
+parser.add_argument("host", help="Hostname or IP address of Backend", type=str)
+parser.add_argument("port", help="Backend port", type=int)
+parser.add_argument("modem", help="The word bluetree", type=str, choices=["bluetree"])
 
-esn = int(sys.argv[1])
-host = sys.argv[2]
-port = int(sys.argv[3])
+subparsers = parser.add_subparsers(description="Send Modes", dest="send_mode")
 
-if sys.argv[4] == 'single':
+single_parser = subparsers.add_parser("single", help="Sends a single UDP message")
+single_parser.add_argument("esn", help="ESN", type=int)
+single_parser.add_argument("latitude", help="Latitude in decimal", type=str)
+single_parser.add_argument("longitude", help="Longitude in decimal", type=str)
+single_parser.add_argument("speed", help="Speed in km/h", type=int)
+single_parser.add_argument("event_id", help="Event ID", type=int)
+
+csv_parser = subparsers.add_parser("csv", help="Sends multiple UDP messages based on CSV file")
+csv_parser.add_argument("file", help="Filename")
+
+args = parser.parse_args()
+
+host = args.host
+port = args.port
+
+if args.send_mode == 'single':
     log.debug("Single Message mode")
-    latitude = sys.argv[5]
-    longitude = sys.argv[6]
-    speed = int(sys.argv[7])
-    eventid = int(sys.argv[8])
+    esn = args.esn
+    latitude = args.latitude
+    longitude = args.longitude
+    speed = args.speed
+    eventid = args.event_id
     bep_message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed)
     log.info("Sending single line")
     log.info(bep_message)
     response = send_udp(host, port, bep_message)
     log.info("Received Ack")
     log.info(response)
-elif sys.argv[4] != 'single' and len(sys.argv) == 5:
+elif args.send_mode == 'csv':
     log.debug("CSV mode")
-    filename = sys.argv[4]
+    filename = args.file
     column_names = []
     with open(filename) as csv_file:
         lc = 0
@@ -70,10 +82,11 @@ elif sys.argv[4] != 'single' and len(sys.argv) == 5:
                     column_names.append(item)
                 lc = lc + 1
             else:
-                latitude = row[0]
-                longitude = row[1]
-                speed = int(row[2])
-                eventid = int(row[3])
+                esn = int(row[0])
+                latitude = row[1]
+                longitude = row[2]
+                speed = int(row[3])
+                eventid = int(row[4])
                 bep_message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed)
                 log.info(f"Sending line {lc} from {filename}\n{bep_message}")
                 response = send_udp(host, port, bep_message)
@@ -81,4 +94,4 @@ elif sys.argv[4] != 'single' and len(sys.argv) == 5:
                 log.info(response)
                 lc = lc + 1
             seqno = seqno + 1
-            sleep(1)
+            sleep(2)
