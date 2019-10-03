@@ -49,13 +49,15 @@ def lmdirect_gps(latitude, longitude, altitude=0):
     int_longitude = int(Decimal(longitude).quantize(Decimal('0.0000001')) * 10000000)
 
     # Convert coordinates to Hex string
-    hex_lat = str(hex((int_latitude + (1 << 32)) % (1 << 32))).upper()
-    hex_long = str(hex((int_longitude + (1 << 32)) % (1 << 32))).upper()
+    hex_lat = str(hex((int_latitude + (1 << 32)) % (1 << 32))).replace('0x', '').upper().zfill(8)
+    print(hex_lat)
+    hex_long = str(hex((int_longitude + (1 << 32)) % (1 << 32))).replace('0x', '').upper().zfill(8)
+    print(hex_long)
     hex_alt = '00 00 00 00'
     # Convert to coordinate string for LMDirect
     coordinates = (
-        f'{hex_lat[2:4]} {hex_lat[4:6]} {hex_lat[6:8]} {hex_lat[8:10]} '
-        f'{hex_long[2:4]} {hex_long[4:6]} {hex_long[6:8]} {hex_long[8:10]} '
+        f'{hex_lat[0:2]} {hex_lat[2:4]} {hex_lat[4:6]} {hex_lat[6:8]} '
+        f'{hex_long[0:2]} {hex_long[2:4]} {hex_long[4:6]} {hex_long[6:8]} '
         f'{hex_alt}'
     )
     # print(coordinates)
