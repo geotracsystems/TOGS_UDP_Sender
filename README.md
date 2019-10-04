@@ -14,10 +14,10 @@ CLI Usage is meant for advanced users or to run long running scripts from CI sys
 
 Single Mode:
 
-`python test_bluetree_msg.py --ignore-gooey single <modem> <host> <port> <esn> <latitude> <longitude> <speed> <eventid>`
+`python togs_udp_sender.py --ignore-gooey single <modem> <host> <port> <esn> <latitude> <longitude> <speed> <eventid>`
 
 CSV Mode:
-`python test_bluetree_msg.py --ignore-gooey csv <filename>`
+`python togs_udp_sender.py --ignore-gooey csv <filename>`
 
 
 **Resources**
@@ -35,5 +35,5 @@ pip install PyInstaller
 
 To create executable, we are using PyInstaller with the following options.
 ```
-pyinstaller -F --windowed test_bluetree_msg.py
+pyinstaller -F --windowed togs_udp_sender.py
 ```
