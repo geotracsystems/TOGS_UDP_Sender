@@ -4,5 +4,6 @@ smalltest.py
 log.txt
 venv/
 build/
+dist/log.txt
 __pycache__
 .idea/
