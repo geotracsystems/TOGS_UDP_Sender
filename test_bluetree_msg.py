@@ -1,5 +1,4 @@
 import csv
-import argparse
 from time import sleep
 from string import Template
 from utils.bep_helper import *
