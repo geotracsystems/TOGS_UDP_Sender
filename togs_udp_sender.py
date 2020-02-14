@@ -1,136 +1,233 @@
-import csv
-from time import sleep
-from string import Template
-from utils.bep_helper import *
-from utils.lmdirect_helper import *
+from collections import namedtuple
+from gooey import Gooey, GooeyParser
 from utils.send_udp import send_udp
 from utils.logger import logger
-from gooey import Gooey, GooeyParser
+from time import sleep
+import csv
+
+import message.vendor as vendor_message
+import message.umf as umf_message
 
 log = logger(__file__)
 
-message_frame_start = 'AA 55 '              # Message Frame Start (constant)
-message_frame_end = 'C9 17 '                # Message Frame End (constant)
+""" fancy names:
+    -> add a new message type here so you can reference it with a linter to help
+"""
+bluetree =              'BlueTree'
+calamp =                'Calamp'
+dual_avl =              'UMF_Dual_Mode_AVL'
+ootn_sound_alarm =      'UMF_OOTN_Sound_Alarm'
+ootn_back_in_vehicle =  'UMF_OOTN_Back_In_Vehicle'
+ootn_begin_timer =      'UMF_OOTN_Begin_Timer'
+ootn_timer_confirm =    'UMF_OOTN_Confirm_Timer'
+ootn_stop_confirm =     'UMF_OOTN_Stop_Confirm'
 
-bep_header_template = Template(
-    '$imei 00 01 01 01 $seqno $length $eventid 00 00 50 11 '
+""" Message Constructors
+    -> Add the message contructor here
+"""
+message_format_handlers = {
+    bluetree:               vendor_message.bep,
+    calamp:                 vendor_message.lmdirect,
+    dual_avl:               umf_message.dual_mode.AVL,
+    ootn_sound_alarm:       umf_message.ootn.sound_alarm,
+    ootn_back_in_vehicle:   umf_message.ootn.back_in_vehicle,
+    ootn_begin_timer:       umf_message.ootn.begin_timer,
+    ootn_timer_confirm:     umf_message.ootn.confirm_timer,
+    ootn_stop_confirm:      umf_message.ootn.stop_timer,
+}
+
+all_formats_fields = ['host', 'port', 'esn', 'seqno']
+
+""" Format Required Fields
+    -> add the agument the format needs here
+"""
+message_format_fields = {
+    'CSV':                  ['file'],
+    bluetree:               ['latitude', 'longitude', 'speed', 'event_id', 'seqno'],
+    calamp:                 ['latitude', 'longitude', 'speed', 'event_id', 'seqno'],
+    dual_avl:               ['latitude', 'longitude', 'speed', 'rssi', 'heading', 'odo', 'event_id','custom_args'],
+    ootn_sound_alarm:       ['custom_args'],
+    ootn_back_in_vehicle:   ['latitude', 'longitude','custom_args'],
+    ootn_begin_timer:       ['latitude', 'longitude', 'timer','custom_args'],
+    ootn_timer_confirm:     ['timer','custom_args'],
+    ootn_stop_confirm:      ['custom_args'],
+}
+
+#11 01 00 1D 26 76 4B 01 00 00 00 1E 00 09 4F 4F 54 4E 2E 54 69 6D 65 72 43 6F 6E 66 69 72 6D 61 74 69 6F 6E 00 06 03 3C 00 04 00 85 27
+#11 00 00 1D 26 76 4B 01 00 00 00 1C 00 09 4F 4F 54 4E 2E 54 69 6D 65 72 43 6F 6E 66 69 72 6D 61 74 69 6F 6E 00 06 03 3C 00 8F EA
+argP = namedtuple('argumentParams',['help','type','choices','default'])
+""" Describes the field, all are optional """
+field_descriptions = {
+#    'message_type':     {'help': "Message Type",                        'type': int,  'default': "dual avl", 'choices': message_format_handlers},
+    'file':             {'help': "Location of the test file",           'type': str,  'default': "/Users/keenan/Desktop/Projects/TOGS_UDP_Sender-master/sample_data.csv"},
+    'host':             {'help': "Hostname or IP of Backend",           'type': str,  'default': "66.244.232.186"}, # avl.ac05.com | 66.244.232.186 <= avl.geotracdemo.com
+    'port':             {'help': "Backend port",                        'type': int,  'default': 6110},
+    'esn':              {'help': "ESN",                                 'type': int,  'default': 5571001222}, # 5571001092 -> broken | 5571001222 -> Jack5530LT | 5561001501 -> Daniel5530
+    'latitude':         {'help': "Latitude in decimal",                 'type': str,  'default': "51.1"},
+    'longitude':        {'help': "Longitude in decimal",                'type': str,  'default': "-113"},
+    'speed':            {'help': "Speed in km/h",                       'type': int,  'default': 20},
+    'event_id':         {'help': "Event ID",                            'type': int,  'default': 1},
+    'seqno':            {'help': "Sequence Number of Message",          'type': int,  'default': 1},
+    'rssi':             {'help': "Unsigned Negative Value",             'type': int,  'default': 60},
+    'heading':          {'help': "Heading",                             'type': int,  'default': 90},
+    'odo':              {'help': "Odometer Value",                      'type': int,  'default': 341297},
+    'timer':            {'help': "Timer for OOTN",                      'type': int,  'default': 5},
+    'custom_args':      {'help': "Wrap in a Named Payload message?",    'type': str,  'default': ""},
+}
+
+""" Structure of message arguments constructed by getting keys from defaults,
+    only esn and  seqno are required
+"""
+menuOnly = [ "message_type", "host", "port" ]
+
+#TODO: Get rid of the namedtuple stuff
+Command = namedtuple('Command', 
+    [ i for i in [*field_descriptions] if i not in menuOnly ], 
+    defaults = (None,) * (len([*field_descriptions]) - len(menuOnly) + 1) #[ None for i in field_descriptions if i not in menuOnly]
 )
 
-bep_body_template = Template(
-    '01 A0 $gp1 04 55 A9 F8 05 04 DC 3A 1D D1 '
-)
 
-lmdirect_message_template = Template(
-    '83 05 $esn 01 01 01 02 $seqno $timestamp1 $timestamp2 $coordinates $speed 00 0E 08 00 00 00 00 00 0F 0A 01 00 FF $eventid 01 00 01 97 21 C9'
-)
+def handle_single(host, port, message_type, args,lc = 1, filename="NONE"):
+    try:
+        if message_type not in message_format_handlers:
+            raise Exception(f'Invalid message type {message_type}\nargs:{",".join(args)}')
 
+        generate_message = message_format_handlers.get(message_type)
+        message = generate_message(args)
 
-def make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed):
-    lmdirect_message = lmdirect_message_template.substitute(esn=lmdirect_esn_converter(esn),
-                                                            seqno=hex_sequence_number(seqno),
-                                                            timestamp1=unixtime_to_hexstring(),
-                                                            timestamp2=unixtime_to_hexstring(),
-                                                            coordinates=lmdirect_gps(latitude, longitude),
-                                                            speed=lmdirect_speed(speed),
-                                                            eventid=lmdirect_event(eventid))
-    return lmdirect_message
+        extra_log = f' line {lc} from {filename}\n' if filename != "NONE" else ""
 
+        log.info(f"Sending {extra_log}{message}")
 
-def make_bep_message(esn, seqno, eventid, latitude, longitude, speed):
-    bep_body = bep_body_template.substitute(gp1=nmea_sentence(latitude, longitude, speed))
-    full_length_hex = hex(int(len(bep_body) / 3 + 24)).replace('x', '').upper().zfill(4)
-    length_format = f'{full_length_hex[2:4]} {full_length_hex[0:2]}'
+        #print(args.esn,message,sep="\n")
+        #print(bytes.fromhex(message))
+        response = send_udp(host, port, message)
 
-    bep_header = bep_header_template.substitute(imei=bep_esn(esn), length=length_format, seqno=bep_seq(seqno),
-                                                eventid=bep_event(eventid))
+        if len(response) > 0:
+            log.info("Received Ack")
+            log.info(response)
+        else:
+            log.info("No Response")
 
-    bep_message = message_frame_start + bep_header + bep_body + message_frame_end
-    return bep_message
+        return response
+    except Exception as e:
+        print(e)
+        return ''
 
 
-@Gooey(default_size=(610, 700),
+def handle_csv(args, seqno):
+    host = args.host
+    port = args.port
+    message_type = args.message_type
+    filename = args.file
+
+    column_names = {}
+    with open(filename) as csv_file:
+        lc = 0
+        csv_reader = csv.reader(csv_file)
+
+        for row in csv_reader:
+            if lc == 0:
+                for col_index in range(0, len(row)):
+                    column_names[row[col_index]] = col_index
+            else:
+                #TODO: make this work with kwargs or something
+                single_command_args = Command(
+                    esn = int(row[ column_names["esn"] ]),
+                    latitude = row[ column_names["latitude"] ],
+                    longitude = row[ column_names["longitude"] ],
+                    speed = int(row[ column_names["speed"] ]),
+                    eventid = int(row[ column_names["eventid"] ]),
+                    seqno = seqno,
+                    rssi = 10,
+                    heading = 10,
+                    odo = 10
+                )
+                handle_single(host,port,message_type,single_command_args)
+            lc = lc + 1
+            seqno = seqno + 1
+            sleep(2)
+
+@Gooey(default_size=(800, 700),
+       advanced=True,
+       dump_build_config=True,
        program_name='TOGS UDP Sender',
        show_restart_button=False,
-       navigation='TABBED',
+       navigation='SIDEBAR',
+       show_sidebar=True,
+       sidebar_title='message_type',
        show_success_modal=False,
+       show_stop_warning=False,
        terminal_font_family='monospace'
        )
 def main():
-    seqno = 1
-
     parser = GooeyParser(description="Send Bluetree and Calamp UDP Messages")
 
-    subparsers = parser.add_subparsers(dest="send_mode")
+    subparsers = parser.add_subparsers(dest="message_type")
 
-    single_parser = subparsers.add_parser("single", help="Sends a single UDP message")
-    single_parser.add_argument("modem", help="Modem Type", type=str, choices=["bluetree", "calamp"])
-    single_parser.add_argument("host", help="Hostname or IP address of Backend", type=str)
-    single_parser.add_argument("port", help="Backend port", type=int)
-    single_parser.add_argument("esn", help="ESN", type=int)
-    single_parser.add_argument("latitude", help="Latitude in decimal", type=str)
-    single_parser.add_argument("longitude", help="Longitude in decimal", type=str)
-    single_parser.add_argument("speed", help="Speed in km/h", type=int)
-    single_parser.add_argument("event_id", help="Event ID", type=int)
+    # Add message type
+    for mtype, fields in message_format_fields.items():
+        subparser = subparsers.add_parser(mtype)
+        # Add arguments for field
+        for field in all_formats_fields + fields:
+            kwargs = field_descriptions[field]
+            if ('optional' in kwargs):
+                del kwargs['optional']
+                subparser.add_argument('-' + field,field, **kwargs)
+            else:
+                subparser.add_argument(field, **kwargs)
 
-    csv_parser = subparsers.add_parser("csv", help="Sends multiple UDP messages based on CSV file")
-    csv_parser.add_argument("modem", help="Modem Type", type=str, choices=["bluetree", "calamp"])
-    csv_parser.add_argument("host", help="Hostname or IP address of Backend", type=str)
-    csv_parser.add_argument("port", help="Backend port", type=int)
-    csv_parser.add_argument("file", help="Filename", widget='FileChooser')
+
+    # single_parser = subparsers.add_parser("single", help="Sends a single UDP message")
+    # for key, value in defaults:
+    #     single_parser.add_argument(key, **value)
+    # single_parser.add_argument("message_type", help="Message Type", type=str, choices=message_formats, default=defaults["message_type"])
+    # single_parser.add_argument("host", help="Hostname or IP address of Backend", type=str, default=defaults["host"])
+    # single_parser.add_argument("port", help="Backend port", type=int, default=defaults["port"])
+    # single_parser.add_argument("esn", help="ESN", type=int, default=defaults["esn"])
+    # single_parser.add_argument("latitude", help="Latitude in decimal", type=str, default=defaults["latitude"])
+    # single_parser.add_argument("longitude", help="Longitude in decimal", type=str, default=defaults["longitude"])
+    # single_parser.add_argument("speed", help="Speed in km/h", type=int, default=defaults["speed"])
+    # single_parser.add_argument("event_id", help="Event ID", type=int, default=defaults["event_id"])
+
+    # csv_parser = subparsers.add_parser("csv", help="Sends multiple UDP messages based on CSV file")
+    # csv_parser.add_argument("message_type", help="Message Type", type=str, choices=message_formats)
+    # csv_parser.add_argument("host", help="Hostname or IP address of Backend", type=str, default=defaults["host"])
+    # csv_parser.add_argument("port", help="Backend port", type=int, default=defaults["port"])
+    # csv_parser.add_argument("file", help="Filename", widget='FileChooser', default=defaultFile)
 
     args = parser.parse_args()
-
-    if args.send_mode == 'single':
-        log.debug("Single Message mode")
-        host = args.host
-        port = args.port
-        esn = args.esn
-        modem = args.modem
-        latitude = args.latitude
-        longitude = args.longitude
-        speed = args.speed
-        eventid = args.event_id
-        if modem == 'bluetree':
-            message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed)
-        elif modem == 'calamp':
-            message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed)
-        log.info("Sending single line")
-        log.info(message)
-        response = send_udp(host, port, message)
-        log.info("Received Ack")
-        log.info(response)
-    elif args.send_mode == 'csv':
+    kwargs = dict([(key,val) for key, val in args.__dict__.items() if key in Command._fields])
+    #print(args)
+    if args.message_type == 'csv':
         log.debug("CSV mode")
-        host = args.host
-        port = args.port
-        modem = args.modem
-        filename = args.file
-        column_names = []
-        with open(filename) as csv_file:
-            lc = 0
-            csv_reader = csv.reader(csv_file)
-            for row in csv_reader:
-                if lc == 0:
-                    for item in row:
-                        column_names.append(item)
-                    lc = lc + 1
-                else:
-                    esn = int(row[0])
-                    latitude = row[1]
-                    longitude = row[2]
-                    speed = int(row[3])
-                    eventid = int(row[4])
-                    if modem == 'bluetree':
-                        message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed)
-                    elif modem == 'calamp':
-                        message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed)
-                    log.info(f"Sending line {lc} from {filename}\n{message}")
-                    response = send_udp(host, port, message)
-                    log.info("Received Ack")
-                    log.info(response)
-                    lc = lc + 1
-                seqno = seqno + 1
-                sleep(2)
+        handle_csv( args , args.seqno)
+    else:
+        single_command_args = Command(**kwargs)
+        handle_single( args.host,
+                       args.port,
+                       args.message_type,
+                       single_command_args )
+
+    # if args.send_mode == 'single':
+    #     log.debug("Single Message mode")
+    #     single_command_args = Command(**args)
+    #     # single_command_args = Command( esn = args.esn,
+    #     #                                latitude = args.latitude,
+    #     #                                longitude = args.longitude,
+    #     #                                speed = args.speed,
+    #     #                                eventid = args.event_id,
+    #     #                                seqno=seqno,
+    #     #                                rssi = 10,
+    #     #                                heading = 10,
+    #     #                                odo = 10 )
+    #     handle_single( args.host,
+    #                    args.port,
+    #                    args.message_type,
+    #                    single_command_args )
+    # elif args.send_mode == 'csv':
+    #     log.debug("CSV mode")
+    #     handle_csv( args , seqno)
 
 
 if __name__ == "__main__":

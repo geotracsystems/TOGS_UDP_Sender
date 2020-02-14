@@ -1,0 +1,2208 @@
+{
+  "language": "english",
+  "target": "'/Library/Frameworks/Python.framework/Versions/3.8/bin/python3' -u '/Users/keenan/Desktop/Projects/TOGS_UDP_Sender-master/togs_udp_sender.py'",
+  "suppress_gooey_flag": false,
+  "program_name": "TOGS UDP Sender",
+  "program_description": "Send Bluetree and Calamp UDP Messages",
+  "sidebar_title": "message_type",
+  "default_size": [
+    800,
+    700
+  ],
+  "auto_start": false,
+  "show_advanced": true,
+  "run_validators": true,
+  "encoding": "utf-8",
+  "show_stop_warning": false,
+  "show_success_modal": false,
+  "show_failure_modal": true,
+  "force_stop_is_error": true,
+  "poll_external_updates": false,
+  "return_to_config": false,
+  "show_restart_button": false,
+  "requires_shell": true,
+  "menu": [],
+  "clear_before_run": false,
+  "use_legacy_titles": true,
+  "num_required_cols": 2,
+  "num_optional_cols": 2,
+  "manual_start": false,
+  "monospace_display": false,
+  "image_dir": "::gooey/default",
+  "language_dir": "/Library/Frameworks/Python.framework/Versions/3.8/lib/python3.8/site-packages/gooey/languages",
+  "progress_regex": null,
+  "progress_expr": null,
+  "hide_progress_msg": false,
+  "disable_progress_bar_animation": false,
+  "disable_stop_button": false,
+  "navigation": "SIDEBAR",
+  "show_sidebar": true,
+  "tabbed_groups": false,
+  "group_by_type": true,
+  "body_bg_color": "#f0f0f0",
+  "header_bg_color": "#ffffff",
+  "header_height": 80,
+  "header_show_title": true,
+  "header_show_subtitle": true,
+  "header_image_center": false,
+  "footer_bg_color": "#f0f0f0",
+  "sidebar_bg_color": "#f2f2f2",
+  "terminal_panel_color": "#F0F0F0",
+  "terminal_font_color": "#000000",
+  "terminal_font_family": "monospace",
+  "terminal_font_weight": null,
+  "terminal_font_size": null,
+  "richtext_controls": false,
+  "error_color": "#ea7878",
+  "layout": "standard",
+  "widgets": {
+    "CSV": {
+      "command": "CSV",
+      "name": "CSV",
+      "help": null,
+      "description": "",
+      "contents": [
+        {
+          "name": "required_args_msg",
+          "items": [
+            {
+              "id": "host",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "host",
+                "help": "Hostname or IP of Backend",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "66.244.232.186",
+                "dest": "host"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "port",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "port",
+                "help": "Backend port",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 6110,
+                "dest": "port"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "esn",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "esn",
+                "help": "ESN",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 5571001222,
+                "dest": "esn"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "seqno",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "seqno",
+                "help": "Sequence Number of Message",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "seqno"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "file",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "file",
+                "help": "Location of the test file",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "/Users/keenan/Desktop/Projects/TOGS_UDP_Sender-master/sample_data.csv",
+                "dest": "file"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            }
+          ],
+          "groups": [],
+          "description": null,
+          "options": {
+            "label_color": "#000000",
+            "description_color": "#363636",
+            "legacy": {
+              "required_cols": 2,
+              "optional_cols": 2
+            },
+            "columns": 2,
+            "padding": 10,
+            "show_border": false
+          }
+        }
+      ]
+    },
+    "BlueTree": {
+      "command": "BlueTree",
+      "name": "BlueTree",
+      "help": null,
+      "description": "",
+      "contents": [
+        {
+          "name": "required_args_msg",
+          "items": [
+            {
+              "id": "host",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "host",
+                "help": "Hostname or IP of Backend",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "66.244.232.186",
+                "dest": "host"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "port",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "port",
+                "help": "Backend port",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 6110,
+                "dest": "port"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "esn",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "esn",
+                "help": "ESN",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 5571001222,
+                "dest": "esn"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "seqno",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "seqno",
+                "help": "Sequence Number of Message",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "seqno"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "latitude",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "latitude",
+                "help": "Latitude in decimal",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "51.1",
+                "dest": "latitude"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "longitude",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "longitude",
+                "help": "Longitude in decimal",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "-113",
+                "dest": "longitude"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "speed",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "speed",
+                "help": "Speed in km/h",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 20,
+                "dest": "speed"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "event_id",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "event_id",
+                "help": "Event ID",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "event_id"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "seqno",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "seqno",
+                "help": "Sequence Number of Message",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "seqno"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            }
+          ],
+          "groups": [],
+          "description": null,
+          "options": {
+            "label_color": "#000000",
+            "description_color": "#363636",
+            "legacy": {
+              "required_cols": 2,
+              "optional_cols": 2
+            },
+            "columns": 2,
+            "padding": 10,
+            "show_border": false
+          }
+        }
+      ]
+    },
+    "Calamp": {
+      "command": "Calamp",
+      "name": "Calamp",
+      "help": null,
+      "description": "",
+      "contents": [
+        {
+          "name": "required_args_msg",
+          "items": [
+            {
+              "id": "host",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "host",
+                "help": "Hostname or IP of Backend",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "66.244.232.186",
+                "dest": "host"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "port",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "port",
+                "help": "Backend port",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 6110,
+                "dest": "port"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "esn",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "esn",
+                "help": "ESN",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 5571001222,
+                "dest": "esn"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "seqno",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "seqno",
+                "help": "Sequence Number of Message",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "seqno"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "latitude",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "latitude",
+                "help": "Latitude in decimal",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "51.1",
+                "dest": "latitude"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "longitude",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "longitude",
+                "help": "Longitude in decimal",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "-113",
+                "dest": "longitude"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "speed",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "speed",
+                "help": "Speed in km/h",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 20,
+                "dest": "speed"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "event_id",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "event_id",
+                "help": "Event ID",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "event_id"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "seqno",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "seqno",
+                "help": "Sequence Number of Message",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "seqno"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            }
+          ],
+          "groups": [],
+          "description": null,
+          "options": {
+            "label_color": "#000000",
+            "description_color": "#363636",
+            "legacy": {
+              "required_cols": 2,
+              "optional_cols": 2
+            },
+            "columns": 2,
+            "padding": 10,
+            "show_border": false
+          }
+        }
+      ]
+    },
+    "UMF_Dual_Mode_AVL": {
+      "command": "UMF_Dual_Mode_AVL",
+      "name": "UMF_Dual_Mode_AVL",
+      "help": null,
+      "description": "",
+      "contents": [
+        {
+          "name": "required_args_msg",
+          "items": [
+            {
+              "id": "host",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "host",
+                "help": "Hostname or IP of Backend",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "66.244.232.186",
+                "dest": "host"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "port",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "port",
+                "help": "Backend port",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 6110,
+                "dest": "port"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "esn",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "esn",
+                "help": "ESN",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 5571001222,
+                "dest": "esn"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "seqno",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "seqno",
+                "help": "Sequence Number of Message",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "seqno"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "latitude",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "latitude",
+                "help": "Latitude in decimal",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "51.1",
+                "dest": "latitude"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "longitude",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "longitude",
+                "help": "Longitude in decimal",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "-113",
+                "dest": "longitude"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "speed",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "speed",
+                "help": "Speed in km/h",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 20,
+                "dest": "speed"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "rssi",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "rssi",
+                "help": "Unsigned Negative Value",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 60,
+                "dest": "rssi"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "heading",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "heading",
+                "help": "Heading",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 90,
+                "dest": "heading"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "odo",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "odo",
+                "help": "Odometer Value",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 341297,
+                "dest": "odo"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "event_id",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "event_id",
+                "help": "Event ID",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "event_id"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "custom_args",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "custom_args",
+                "help": "Wrap in a Named Payload message?",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "",
+                "dest": "custom_args"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            }
+          ],
+          "groups": [],
+          "description": null,
+          "options": {
+            "label_color": "#000000",
+            "description_color": "#363636",
+            "legacy": {
+              "required_cols": 2,
+              "optional_cols": 2
+            },
+            "columns": 2,
+            "padding": 10,
+            "show_border": false
+          }
+        }
+      ]
+    },
+    "UMF_OOTN_Sound_Alarm": {
+      "command": "UMF_OOTN_Sound_Alarm",
+      "name": "UMF_OOTN_Sound_Alarm",
+      "help": null,
+      "description": "",
+      "contents": [
+        {
+          "name": "required_args_msg",
+          "items": [
+            {
+              "id": "host",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "host",
+                "help": "Hostname or IP of Backend",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "66.244.232.186",
+                "dest": "host"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "port",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "port",
+                "help": "Backend port",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 6110,
+                "dest": "port"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "esn",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "esn",
+                "help": "ESN",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 5571001222,
+                "dest": "esn"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "seqno",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "seqno",
+                "help": "Sequence Number of Message",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "seqno"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "custom_args",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "custom_args",
+                "help": "Wrap in a Named Payload message?",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "",
+                "dest": "custom_args"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            }
+          ],
+          "groups": [],
+          "description": null,
+          "options": {
+            "label_color": "#000000",
+            "description_color": "#363636",
+            "legacy": {
+              "required_cols": 2,
+              "optional_cols": 2
+            },
+            "columns": 2,
+            "padding": 10,
+            "show_border": false
+          }
+        }
+      ]
+    },
+    "UMF_OOTN_Back_In_Vehicle": {
+      "command": "UMF_OOTN_Back_In_Vehicle",
+      "name": "UMF_OOTN_Back_In_Vehicle",
+      "help": null,
+      "description": "",
+      "contents": [
+        {
+          "name": "required_args_msg",
+          "items": [
+            {
+              "id": "host",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "host",
+                "help": "Hostname or IP of Backend",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "66.244.232.186",
+                "dest": "host"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "port",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "port",
+                "help": "Backend port",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 6110,
+                "dest": "port"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "esn",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "esn",
+                "help": "ESN",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 5571001222,
+                "dest": "esn"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "seqno",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "seqno",
+                "help": "Sequence Number of Message",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "seqno"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "latitude",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "latitude",
+                "help": "Latitude in decimal",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "51.1",
+                "dest": "latitude"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "longitude",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "longitude",
+                "help": "Longitude in decimal",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "-113",
+                "dest": "longitude"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "custom_args",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "custom_args",
+                "help": "Wrap in a Named Payload message?",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "",
+                "dest": "custom_args"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            }
+          ],
+          "groups": [],
+          "description": null,
+          "options": {
+            "label_color": "#000000",
+            "description_color": "#363636",
+            "legacy": {
+              "required_cols": 2,
+              "optional_cols": 2
+            },
+            "columns": 2,
+            "padding": 10,
+            "show_border": false
+          }
+        }
+      ]
+    },
+    "UMF_OOTN_Begin_Timer": {
+      "command": "UMF_OOTN_Begin_Timer",
+      "name": "UMF_OOTN_Begin_Timer",
+      "help": null,
+      "description": "",
+      "contents": [
+        {
+          "name": "required_args_msg",
+          "items": [
+            {
+              "id": "host",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "host",
+                "help": "Hostname or IP of Backend",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "66.244.232.186",
+                "dest": "host"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "port",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "port",
+                "help": "Backend port",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 6110,
+                "dest": "port"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "esn",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "esn",
+                "help": "ESN",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 5571001222,
+                "dest": "esn"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "seqno",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "seqno",
+                "help": "Sequence Number of Message",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "seqno"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "latitude",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "latitude",
+                "help": "Latitude in decimal",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "51.1",
+                "dest": "latitude"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "longitude",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "longitude",
+                "help": "Longitude in decimal",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "-113",
+                "dest": "longitude"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "timer",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "timer",
+                "help": "Timer for OOTN",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 5,
+                "dest": "timer"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "custom_args",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "custom_args",
+                "help": "Wrap in a Named Payload message?",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "",
+                "dest": "custom_args"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            }
+          ],
+          "groups": [],
+          "description": null,
+          "options": {
+            "label_color": "#000000",
+            "description_color": "#363636",
+            "legacy": {
+              "required_cols": 2,
+              "optional_cols": 2
+            },
+            "columns": 2,
+            "padding": 10,
+            "show_border": false
+          }
+        }
+      ]
+    },
+    "UMF_OOTN_Confirm_Timer": {
+      "command": "UMF_OOTN_Confirm_Timer",
+      "name": "UMF_OOTN_Confirm_Timer",
+      "help": null,
+      "description": "",
+      "contents": [
+        {
+          "name": "required_args_msg",
+          "items": [
+            {
+              "id": "host",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "host",
+                "help": "Hostname or IP of Backend",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "66.244.232.186",
+                "dest": "host"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "port",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "port",
+                "help": "Backend port",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 6110,
+                "dest": "port"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "esn",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "esn",
+                "help": "ESN",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 5571001222,
+                "dest": "esn"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "seqno",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "seqno",
+                "help": "Sequence Number of Message",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "seqno"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "timer",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "timer",
+                "help": "Timer for OOTN",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 5,
+                "dest": "timer"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "custom_args",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "custom_args",
+                "help": "Wrap in a Named Payload message?",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "",
+                "dest": "custom_args"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            }
+          ],
+          "groups": [],
+          "description": null,
+          "options": {
+            "label_color": "#000000",
+            "description_color": "#363636",
+            "legacy": {
+              "required_cols": 2,
+              "optional_cols": 2
+            },
+            "columns": 2,
+            "padding": 10,
+            "show_border": false
+          }
+        }
+      ]
+    },
+    "UMF_OOTN_Stop_Confirm": {
+      "command": "UMF_OOTN_Stop_Confirm",
+      "name": "UMF_OOTN_Stop_Confirm",
+      "help": null,
+      "description": "",
+      "contents": [
+        {
+          "name": "required_args_msg",
+          "items": [
+            {
+              "id": "host",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "host",
+                "help": "Hostname or IP of Backend",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "66.244.232.186",
+                "dest": "host"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "port",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "port",
+                "help": "Backend port",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 6110,
+                "dest": "port"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "esn",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "esn",
+                "help": "ESN",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 5571001222,
+                "dest": "esn"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "seqno",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "seqno",
+                "help": "Sequence Number of Message",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": 1,
+                "dest": "seqno"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            },
+            {
+              "id": "custom_args",
+              "type": "TextField",
+              "cli_type": "positional",
+              "required": true,
+              "data": {
+                "display_name": "custom_args",
+                "help": "Wrap in a Named Payload message?",
+                "required": true,
+                "nargs": "",
+                "commands": [],
+                "choices": [],
+                "default": "",
+                "dest": "custom_args"
+              },
+              "options": {
+                "error_color": "#ea7878",
+                "label_color": "#000000",
+                "help_color": "#363636",
+                "full_width": false,
+                "validator": {
+                  "test": "user_input and not user_input.isspace()",
+                  "message": "This field is required"
+                },
+                "external_validator": {
+                  "cmd": ""
+                }
+              }
+            }
+          ],
+          "groups": [],
+          "description": null,
+          "options": {
+            "label_color": "#000000",
+            "description_color": "#363636",
+            "legacy": {
+              "required_cols": 2,
+              "optional_cols": 2
+            },
+            "columns": 2,
+            "padding": 10,
+            "show_border": false
+          }
+        }
+      ]
+    }
+  }
+}
