@@ -37,3 +37,40 @@ To create executable, we are using PyInstaller with the following options.
 ```
 pyinstaller -F --windowed togs_udp_sender.py
 ```
+### Adding Message Formats
+1. create a format_handler in the message folder:
+```python
+    def my_handler(args):
+        ''' args is a namespace with every parameter from the command line or gui'''
+        x = args.myfield
+        ''' return a hex string of format "FF FF FF FF FF" '''
+        return hex_str
+```
+In ```togs_udb_sender.py```:
+1. add a new fancyname
+    ```fancyname = 'This Message Format' ```
+2. add your handler to ```message_format_handlers[fancyname]```
+    ```python
+    message_format_handlers = {
+        ...
+        fancyname: my_handler,
+    }
+    ```
+3. add required fields for your message (ones used in ```my_handler()```)
+```python
+    message_format_fields = {
+        ...
+        fancyname: ['latitude', 'longitude', 'speed', 'event_id', 'seqno', 'myfield'],
+    }
+```
+4. add any new fields you're using
+```python
+    field_descriptions = {
+        ...
+        'myfield': {
+            'help': "Description of the field",
+            'type': [str | int | etc.],
+            'default': value,
+        },
+    }
+```
