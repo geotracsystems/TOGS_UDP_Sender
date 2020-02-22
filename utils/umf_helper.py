@@ -94,3 +94,20 @@ def umf_gps_time(lat, lon, time=time()):
     return ' '.join([
         hex_lat, hex_lon, umf_time(time)
     ])
+
+
+def umf_ip(ip):
+    byteParts = [ sized_hex(byte, 1) for byte in ip.split('.', 4) ]
+    return ' '.join( byteParts )
+
+ack_types = ['Success', 'Bad CRC', 'Cellular Wrapper Error', 'Cannot Parse Message Data']
+def umf_parse_response(response):
+    protocol_version = sized_hex(response[0], 1)
+    ack_nack_type    = int(response[1])
+    seqno = sized_hex(response[2],1) + ' ' + sized_hex(response[3],1)
+    crc16 = sized_hex(response[4],1) + ' ' + sized_hex(response[5],1)
+    return f'''
+\tversion:    \t{protocol_version}
+\tmessage: \t{ack_types[ack_nack_type]}
+\tseqno:      \t{seqno}
+\tcrc16:      \t{crc16}'''

@@ -16,4 +16,4 @@ def send_udp(host, port, data):
 
     ack = d[0]
     sock.close()
-    return str(ack)
+    return ack

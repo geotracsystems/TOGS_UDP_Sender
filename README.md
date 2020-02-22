@@ -2,10 +2,17 @@
 Test tool for sending various TOGS messages to the backend over UDP. 
 Currently supports:
  * LMDirect (Calamp)
- * BEP (Bluetree).
+ * BEP (Bluetree)
  * UMF:
+    * Administration:
+        * Dual Mode Eligibility
+        * Network Medium Change
     * Dual Mode AVL
-    * OOTN (Begin Timer, Back In Vehicle)
+    * OoTN
+        * Begin Timer
+        * Back in Vehicle
+  
+(OotN sound_alarm, confirm_timer, and stop_timer methods are also implemented, but they are server > client messages, so they will not get a successful ack from the server)
 
 Executable files for Windows (.exe) can be found in the `dist/` directory. There's no need to install Python for running this tool in GUI mode.
 However for running the tool in CLI mode, Python and some pre-requisites are required. See Developer Notes section for more details.

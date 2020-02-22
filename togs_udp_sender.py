@@ -2,6 +2,7 @@ from collections import namedtuple
 from gooey import Gooey, GooeyParser
 from utils.send_udp import send_udp
 from utils.logger import logger
+from utils.umf_helper import umf_parse_response
 from time import sleep
 import csv
 
@@ -13,14 +14,16 @@ log = logger(__file__)
 """ fancy names:
     -> add a new message type here so you can reference it with a linter to help
 """
-bluetree =              'BlueTree'
-calamp =                'Calamp'
-dual_avl =              'UMF_Dual_Mode_AVL'
-ootn_sound_alarm =      'UMF_OOTN_Sound_Alarm'
-ootn_back_in_vehicle =  'UMF_OOTN_Back_In_Vehicle'
-ootn_begin_timer =      'UMF_OOTN_Begin_Timer'
-ootn_timer_confirm =    'UMF_OOTN_Confirm_Timer'
-ootn_stop_confirm =     'UMF_OOTN_Stop_Confirm'
+bluetree =               'BlueTree'
+calamp =                 'Calamp'
+dual_avl =               'UMF_Dual_Mode_AVL'
+ootn_sound_alarm =       'UMF_OOTN_Sound_Alarm'
+ootn_back_in_vehicle =   'UMF_OOTN_Back_In_Vehicle'
+ootn_begin_timer =       'UMF_OOTN_Begin_Timer'
+ootn_timer_confirm =     'UMF_OOTN_Confirm_Timer'
+ootn_stop_confirm =      'UMF_OOTN_Stop_Confirm'
+admin_dual_eligability = 'Admin_Dual_Mode_Eligibility'
+admin_network_change =   'Admin_Network_Medium_Change'
 
 """ Message Constructors
     -> Add the message contructor here
@@ -34,6 +37,8 @@ message_format_handlers = {
     ootn_begin_timer:       umf_message.ootn.begin_timer,
     ootn_timer_confirm:     umf_message.ootn.confirm_timer,
     ootn_stop_confirm:      umf_message.ootn.stop_timer,
+    admin_network_change:   umf_message.administration.network_medium_change,
+    admin_dual_eligability: umf_message.administration.dual_mode_eligibility,
 }
 
 all_formats_fields = ['host', 'port', 'esn', 'seqno']
@@ -45,12 +50,14 @@ message_format_fields = {
     'CSV':                  ['file'],
     bluetree:               ['latitude', 'longitude', 'speed', 'event_id', 'seqno'],
     calamp:                 ['latitude', 'longitude', 'speed', 'event_id', 'seqno'],
-    dual_avl:               ['latitude', 'longitude', 'speed', 'rssi', 'heading', 'odo', 'event_id','custom_args'],
+    dual_avl:               ['latitude', 'longitude', 'speed', 'rssi', 'heading', 'odo', 'event_id', 'custom_args'],
     ootn_sound_alarm:       ['custom_args'],
-    ootn_back_in_vehicle:   ['latitude', 'longitude','custom_args'],
-    ootn_begin_timer:       ['latitude', 'longitude', 'timer','custom_args'],
-    ootn_timer_confirm:     ['timer','custom_args'],
+    ootn_back_in_vehicle:   ['latitude', 'longitude', 'custom_args'],
+    ootn_begin_timer:       ['latitude', 'longitude', 'timer', 'custom_args'],
+    ootn_timer_confirm:     ['timer', 'custom_args'],
     ootn_stop_confirm:      ['custom_args'],
+    admin_network_change:   ['latitude', 'longitude', 'wan_ip', 'custom_args'],
+    admin_dual_eligability: ['eligibilities', 'custom_args'],
 }
 
 #11 01 00 1D 26 76 4B 01 00 00 00 1E 00 09 4F 4F 54 4E 2E 54 69 6D 65 72 43 6F 6E 66 69 72 6D 61 74 69 6F 6E 00 06 03 3C 00 04 00 85 27
@@ -72,7 +79,9 @@ field_descriptions = {
     'heading':          {'help': "Heading",                             'type': int,  'default': 90},
     'odo':              {'help': "Odometer Value",                      'type': int,  'default': 341297},
     'timer':            {'help': "Timer for OOTN",                      'type': int,  'default': 5},
-    'custom_args':      {'help': "Wrap in a Named Payload message?",    'type': str,  'default': ""},
+    'eligibilities':    {'help': "Comma separated, [0-5]",              'type': str,  'default': "0,0,0,0,0,0"},
+    'wan_ip':           {'help': "IP address, or 'none' for Iridium",   'type': str,  'default': "123.45.67.89"},
+    'custom_args':      {'help': "Wrap in a Named Payload message?",    'type': str,  'default': "none"},
 }
 
 """ Structure of message arguments constructed by getting keys from defaults,
@@ -104,8 +113,10 @@ def handle_single(host, port, message_type, args,lc = 1, filename="NONE"):
         response = send_udp(host, port, message)
 
         if len(response) > 0:
-            log.info("Received Ack")
+            log.info("Response:")
             log.info(response)
+            if (message_type not in [ bluetree, calamp ]):
+                log.info(umf_parse_response(response))
         else:
             log.info("No Response")
 
