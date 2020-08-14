@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 def get_version():
-    f = open('versions.txt')
+    f = open('togs_udp_sender.spec')
     for line in f.read().splitlines():
         if line.startswith('__version__'):
             delim = "'"
