@@ -1,10 +1,7 @@
-test_lmdirect_msg.spec
-test_bluetree_msg.spec
-togs_udp_sender.spec
 smalltest.py
 log.txt
 venv/
 build/
-dist/log.txt
+dist/
 __pycache__
 .idea/
