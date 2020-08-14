@@ -7,6 +7,7 @@ from utils.send_udp import send_udp
 from utils.logger import logger
 from gooey import Gooey, GooeyParser
 
+
 log = logger(__file__)
 
 message_frame_start = 'AA 55 '              # Message Frame Start (constant)
@@ -25,11 +26,11 @@ lmdirect_message_template = Template(
 )
 
 
-def make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed):
+def make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed, timestamp):
     lmdirect_message = lmdirect_message_template.substitute(esn=lmdirect_esn_converter(esn),
                                                             seqno=hex_sequence_number(seqno),
-                                                            timestamp1=unixtime_to_hexstring(),
-                                                            timestamp2=unixtime_to_hexstring(),
+                                                            timestamp1=unixtime_to_hexstring(timestamp),
+                                                            timestamp2=unixtime_to_hexstring(timestamp),
                                                             coordinates=lmdirect_gps(latitude, longitude),
                                                             speed=lmdirect_speed(speed),
                                                             eventid=lmdirect_event(eventid))
@@ -77,6 +78,7 @@ def main():
     csv_parser.add_argument("host", help="Hostname or IP address of Backend", type=str)
     csv_parser.add_argument("port", help="Backend port", type=int)
     csv_parser.add_argument("file", help="Filename", widget='FileChooser')
+    csv_parser.add_argument("delay", help="Time between messages (s)", type=int)
 
     args = parser.parse_args()
 
@@ -105,6 +107,7 @@ def main():
         port = args.port
         modem = args.modem
         filename = args.file
+        delay = args.delay
         column_names = []
         with open(filename) as csv_file:
             lc = 0
@@ -120,17 +123,18 @@ def main():
                     longitude = row[2]
                     speed = int(row[3])
                     eventid = int(row[4])
+                    timestamp = row[5]
                     if modem == 'bluetree':
                         message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed)
                     elif modem == 'calamp':
-                        message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed)
+                        message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed, timestamp)
                     log.info(f"Sending line {lc} from {filename}\n{message}")
                     response = send_udp(host, port, message)
                     log.info("Received Ack")
                     log.info(response)
                     lc = lc + 1
                 seqno = seqno + 1
-                sleep(2)
+                sleep(delay)
 
 
 if __name__ == "__main__":
