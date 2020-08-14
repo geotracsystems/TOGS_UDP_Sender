@@ -1,8 +1,7 @@
 ## Introduction
 Test tool for sending various TOGS messages to the backend over UDP. Currently supports LMDirect (Calamp) and BEP (Bluetree) protocols.
 
-Executable files for Windows (.exe) can be found in the `dist/` directory. There's no need to install Python for running this tool in GUI mode.
-However for running the tool in CLI mode, Python and some pre-requisites are required. See Developer Notes section for more details.
+Executable files for Windows (.exe) can be found on TeamCity
 
 ## Usage
 ### GUI Usage
