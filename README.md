@@ -34,5 +34,5 @@ pip install PyInstaller
 
 To create executable, we are using PyInstaller with the following options.
 ```
-pyinstaller -F --windowed togs_udp_sender.spec
+pyinstaller togs_udp_sender.spec
 ```

@@ -1,5 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
-__version__ = '0.99'
+__version__ = '0.99.1'
 
 
 block_cipher = None
