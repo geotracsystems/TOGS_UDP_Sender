@@ -26,6 +26,17 @@ lmdirect_message_template = Template(
 )
 
 
+def make_message_for_modem_type(esn, seqno, eventid, latitude, longitude, speed, msgtime):
+    if 350000000000000 <= esn <= 359999999999999:
+        message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed, msgtime)
+        return message
+    elif 1000000000 <= esn <= 5999999999:
+        message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed, msgtime)
+        return message
+    else:
+        return 'invalid'
+
+
 def make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed, msgtime):
     lmdirect_message = lmdirect_message_template.substitute(esn=lmdirect_esn_converter(esn),
                                                             seqno=hex_sequence_number(seqno),
@@ -59,26 +70,23 @@ def make_bep_message(esn, seqno, eventid, latitude, longitude, speed, msgtime):
        )
 def main():
     seqno = 1
-
     parser = GooeyParser(description="Send Bluetree and Calamp UDP Messages")
 
     subparsers = parser.add_subparsers(dest="send_mode")
 
     single_parser = subparsers.add_parser("single", help="Sends a single UDP message")
-    single_parser.add_argument("modem", help="Modem Type", type=str, choices=["bluetree", "calamp"])
     single_parser.add_argument("host", help="Hostname or IP address of Backend", type=str)
     single_parser.add_argument("port", help="Backend port", type=int)
-    single_parser.add_argument("esn", help="ESN", type=int)
+    single_parser.add_argument("esn", help="ESN or IMEI of Modem", type=int)
     single_parser.add_argument("latitude", help="Latitude in decimal", type=str)
     single_parser.add_argument("longitude", help="Longitude in decimal", type=str)
     single_parser.add_argument("speed", help="Speed in km/h", type=int)
     single_parser.add_argument("event_id", help="Event ID", type=int)
     single_parser.add_argument("--MessageTime",
-                               help="Origination Time of Message (unixtime) (if blank, current time is sent)",
+                               help="Origination Time of Message in unixtime (Default: now)",
                                type=int, required=False)
 
     csv_parser = subparsers.add_parser("csv", help="Sends multiple UDP messages based on CSV file")
-    csv_parser.add_argument("modem", help="Modem Type", type=str, choices=["bluetree", "calamp"])
     csv_parser.add_argument("host", help="Hostname or IP address of Backend", type=str)
     csv_parser.add_argument("port", help="Backend port", type=int)
     csv_parser.add_argument("file", help="Filename", widget='FileChooser')
@@ -91,7 +99,6 @@ def main():
         host = args.host
         port = args.port
         esn = args.esn
-        modem = args.modem
         latitude = args.latitude
         longitude = args.longitude
         speed = args.speed
@@ -102,10 +109,12 @@ def main():
         else:
             msgtime = args.MessageTime
 
-        if modem == 'bluetree':
-            message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed, msgtime)
-        elif modem == 'calamp':
-            message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed, msgtime)
+        message = make_message_for_modem_type(esn, seqno, eventid, latitude, longitude, speed, msgtime)
+
+        if message == 'invalid':
+            log.error("Invalid ESN. Please check ESN and try again.")
+            exit()
+
         log.info("Sending single line")
         log.info(message)
         response = send_udp(host, port, message)
@@ -115,7 +124,6 @@ def main():
         log.debug("CSV mode")
         host = args.host
         port = args.port
-        modem = args.modem
         filename = args.file
         delay = args.delay
         column_names = []
@@ -139,10 +147,13 @@ def main():
                     except IndexError:
                         msgtime = time()
 
-                    if modem == 'bluetree':
-                        message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed, msgtime)
-                    elif modem == 'calamp':
-                        message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed, msgtime)
+                    message = make_message_for_modem_type(esn, seqno, eventid, latitude, longitude, speed, msgtime)
+
+                    if message == 'invalid':
+                        log.warning(f"Invalid ESN: {esn}, skipping line {lc}")
+                        lc = lc + 1
+                        continue
+
                     log.info(f"Sending line {lc} from {filename}\n{message}")
                     response = send_udp(host, port, message)
                     log.info("Received Ack")

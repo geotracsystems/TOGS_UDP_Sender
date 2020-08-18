@@ -1,7 +1,5 @@
-* Smart ESN Detection
 * LMDirect Accumulators and Application Type 5 Support
 * Add support to hide certain fields
 * Multithreading
 * Validate CSV
 * Better versioning
-s
