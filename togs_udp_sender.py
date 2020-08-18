@@ -1,5 +1,5 @@
 import csv
-from time import sleep
+from time import sleep, time
 from string import Template
 from utils.bep_helper import *
 from utils.lmdirect_helper import *
@@ -26,19 +26,19 @@ lmdirect_message_template = Template(
 )
 
 
-def make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed, timestamp):
+def make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed, msgtime):
     lmdirect_message = lmdirect_message_template.substitute(esn=lmdirect_esn_converter(esn),
                                                             seqno=hex_sequence_number(seqno),
-                                                            timestamp1=unixtime_to_hexstring(timestamp),
-                                                            timestamp2=unixtime_to_hexstring(timestamp),
+                                                            timestamp1=unixtime_to_hexstring(msgtime),
+                                                            timestamp2=unixtime_to_hexstring(msgtime),
                                                             coordinates=lmdirect_gps(latitude, longitude),
                                                             speed=lmdirect_speed(speed),
                                                             eventid=lmdirect_event(eventid))
     return lmdirect_message
 
 
-def make_bep_message(esn, seqno, eventid, latitude, longitude, speed):
-    bep_body = bep_body_template.substitute(gp1=nmea_sentence(latitude, longitude, speed))
+def make_bep_message(esn, seqno, eventid, latitude, longitude, speed, msgtime):
+    bep_body = bep_body_template.substitute(gp1=nmea_sentence(latitude, longitude, speed, msgtime))
     full_length_hex = hex(int(len(bep_body) / 3 + 24)).replace('x', '').upper().zfill(4)
     length_format = f'{full_length_hex[2:4]} {full_length_hex[0:2]}'
 
@@ -72,6 +72,7 @@ def main():
     single_parser.add_argument("longitude", help="Longitude in decimal", type=str)
     single_parser.add_argument("speed", help="Speed in km/h", type=int)
     single_parser.add_argument("event_id", help="Event ID", type=int)
+    single_parser.add_argument("--MessageTime", help="Origination Time of Message (unixtime)", type=int, required=False)
 
     csv_parser = subparsers.add_parser("csv", help="Sends multiple UDP messages based on CSV file")
     csv_parser.add_argument("modem", help="Modem Type", type=str, choices=["bluetree", "calamp"])
@@ -92,10 +93,17 @@ def main():
         longitude = args.longitude
         speed = args.speed
         eventid = args.event_id
+
+        if args.MessageTime is None:
+            msgtime = time()
+        else:
+            msgtime = args.MessageTime
+
+
         if modem == 'bluetree':
-            message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed)
+            message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed, msgtime)
         elif modem == 'calamp':
-            message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed)
+            message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed, msgtime)
         log.info("Sending single line")
         log.info(message)
         response = send_udp(host, port, message)
@@ -123,11 +131,16 @@ def main():
                     longitude = row[2]
                     speed = int(row[3])
                     eventid = int(row[4])
-                    timestamp = row[5]
+
+                    try:
+                        msgtime = int(row[5])
+                    except IndexError:
+                        msgtime = time()
+
                     if modem == 'bluetree':
-                        message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed)
+                        message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed, msgtime)
                     elif modem == 'calamp':
-                        message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed, timestamp)
+                        message = make_lmdirect_message(esn, seqno, eventid, latitude, longitude, speed, msgtime)
                     log.info(f"Sending line {lc} from {filename}\n{message}")
                     response = send_udp(host, port, message)
                     log.info("Received Ack")

@@ -23,7 +23,6 @@ def lmdirect_esn_converter(esn):
 
 def unixtime_to_hexstring(timest):
     """Convert current unix time to a Hex String in Little Endian"""
-    # ts = time()
     timestamp = str(hex(int(timest))).replace('0x', '').upper()
     hextimestamp = f'{timestamp[0:2]} {timestamp[2:4]} {timestamp[4:6]} {timestamp[6:8]}'
     return hextimestamp

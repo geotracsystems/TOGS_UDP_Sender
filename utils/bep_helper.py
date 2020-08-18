@@ -1,4 +1,4 @@
-import time
+from time import time, gmtime, strftime
 from math import floor
 from decimal import Decimal
 
@@ -34,12 +34,12 @@ def bep_event(eventid):
     return event
 
 
-def nmea_sentence(latitude, longitude, speed):
+def nmea_sentence(latitude, longitude, speed, timest):
     latitude_decimal = Decimal(latitude).quantize(Decimal('0.0000001'))
     longitude_decimal = Decimal(longitude).quantize(Decimal('0.0000001'))
 
     sentence_prefix = 'GPRMC'
-    nmea_time = str(time.strftime('%H%M%S', time.gmtime()))
+    nmea_time = str(strftime('%H%M%S', gmtime(timest)))
     rmc_status = 'A'
 
     lat_abs = abs(latitude_decimal)
@@ -57,7 +57,7 @@ def nmea_sentence(latitude, longitude, speed):
     knot_speed = f'{(speed*0.540):05.1f}'
     nmea_heading = '000.0'
 
-    nmea_date = str(time.strftime('%d%m%y', time.gmtime()))
+    nmea_date = str(strftime('%d%m%y', gmtime(timest)))
     nmea_magvar = '003.1,W'
 
     nmea_rmc_sentence = (
