@@ -1,11 +1,11 @@
 ## Introduction
 Test tool for sending various TOGS messages to the backend over UDP. Currently supports LMDirect (Calamp) and BEP (Bluetree) protocols.
 
-Executable files for Windows (.exe) can be found on TeamCity
+Executable files for Windows (.exe) can be found in the on P:\TOGS_UDP_Sender and will be available on TeamCity in the future.
 
 ## Usage
 ### GUI Usage
-Simply double click the .exe file in `dist/`. The instructions on the screen are intuitive.
+Simply double click the .exe file. The instructions on the screen are intuitive.
 To send a single message, select the "single" tab. The "csv" tab allows you to send multiple messages in a CSV.
 
 ### CLI Usage
@@ -34,5 +34,5 @@ pip install PyInstaller
 
 To create executable, we are using PyInstaller with the following options.
 ```
-pyinstaller -F --windowed togs_udp_sender.py
+pyinstaller -F --windowed togs_udp_sender.spec
 ```
