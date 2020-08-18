@@ -73,7 +73,7 @@ def make_bep_message(esn, seqno, eventid, latitude, longitude, speed, msgtime):
 
 
 @Gooey(default_size=(600, 750),
-       program_name=f'TOGS UDP Sender - v{get_version()}',
+       program_name=f'TOGS UDP Sender',
        show_restart_button=False,
        navigation='TABBED',
        show_success_modal=False,
