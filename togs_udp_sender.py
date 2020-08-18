@@ -1,4 +1,5 @@
 import csv
+import sys
 from time import sleep, time
 from string import Template
 from utils.bep_helper import *
@@ -24,6 +25,17 @@ bep_body_template = Template(
 lmdirect_message_template = Template(
     '83 05 $esn 01 01 01 02 $seqno $timestamp1 $timestamp2 $coordinates $speed 00 0E 08 00 00 00 00 00 0F 0A 01 00 FF $eventid 01 00 01 97 21 C9'
 )
+
+
+def get_version():
+    f = open('togs_udp_sender.spec')
+    for line in f.read().splitlines():
+        if line.startswith('__version__'):
+            delim = "'"
+            return line.split(delim)[1]
+        else:
+            continue
+    raise RuntimeError("Unable to find version string.")
 
 
 def make_message_for_modem_type(esn, seqno, eventid, latitude, longitude, speed, msgtime):
@@ -61,7 +73,7 @@ def make_bep_message(esn, seqno, eventid, latitude, longitude, speed, msgtime):
 
 
 @Gooey(default_size=(600, 750),
-       program_name=f'TOGS UDP Sender',
+       program_name=f'TOGS UDP Sender - v{get_version()}',
        show_restart_button=False,
        navigation='TABBED',
        show_success_modal=False,
@@ -113,7 +125,7 @@ def main():
 
         if message == 'invalid':
             log.error("Invalid ESN. Please check ESN and try again.")
-            exit()
+            sys.exit()
 
         log.info("Sending single line")
         log.info(message)
