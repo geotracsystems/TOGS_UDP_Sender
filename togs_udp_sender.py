@@ -49,12 +49,13 @@ def make_bep_message(esn, seqno, eventid, latitude, longitude, speed, msgtime):
     return bep_message
 
 
-@Gooey(default_size=(610, 700),
-       program_name='TOGS UDP Sender',
+@Gooey(default_size=(600, 750),
+       program_name=f'TOGS UDP Sender',
        show_restart_button=False,
        navigation='TABBED',
        show_success_modal=False,
-       terminal_font_family='monospace'
+       terminal_font_family='TELETYPE',
+       terminal_font_color='#000000',
        )
 def main():
     seqno = 1
@@ -72,7 +73,9 @@ def main():
     single_parser.add_argument("longitude", help="Longitude in decimal", type=str)
     single_parser.add_argument("speed", help="Speed in km/h", type=int)
     single_parser.add_argument("event_id", help="Event ID", type=int)
-    single_parser.add_argument("--MessageTime", help="Origination Time of Message (unixtime)", type=int, required=False)
+    single_parser.add_argument("--MessageTime",
+                               help="Origination Time of Message (unixtime) (if blank, current time is sent)",
+                               type=int, required=False)
 
     csv_parser = subparsers.add_parser("csv", help="Sends multiple UDP messages based on CSV file")
     csv_parser.add_argument("modem", help="Modem Type", type=str, choices=["bluetree", "calamp"])
@@ -98,7 +101,6 @@ def main():
             msgtime = time()
         else:
             msgtime = args.MessageTime
-
 
         if modem == 'bluetree':
             message = make_bep_message(esn, seqno, eventid, latitude, longitude, speed, msgtime)

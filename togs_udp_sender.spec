@@ -1,9 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
-__version__ = '0.99.1'
-
+__version__ = '0.99.2'
 
 block_cipher = None
-
 
 a = Analysis(['togs_udp_sender.py'],
              pathex=['C:\\TOGS_UDP_Sender'],

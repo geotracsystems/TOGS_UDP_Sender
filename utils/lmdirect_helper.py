@@ -49,9 +49,7 @@ def lmdirect_gps(latitude, longitude, altitude=0):
 
     # Convert coordinates to Hex string
     hex_lat = str(hex((int_latitude + (1 << 32)) % (1 << 32))).replace('0x', '').upper().zfill(8)
-    print(hex_lat)
     hex_long = str(hex((int_longitude + (1 << 32)) % (1 << 32))).replace('0x', '').upper().zfill(8)
-    print(hex_long)
     hex_alt = '00 00 00 00'
     # Convert to coordinate string for LMDirect
     coordinates = (
